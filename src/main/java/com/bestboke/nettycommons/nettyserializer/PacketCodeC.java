@@ -1,5 +1,6 @@
 package com.bestboke.nettycommons.nettyserializer;
 
+import com.bestboke.nettycommons.DefaultParameter;
 import com.bestboke.nettycommons.nettypacket.LoginRequestPacket;
 import com.bestboke.nettycommons.nettypacket.Packet;
 import io.netty.buffer.ByteBuf;
@@ -12,7 +13,6 @@ import static com.bestboke.nettycommons.nettypacket.Command.LOGIN_REQUEST;
 
 public class PacketCodeC {
 
-    private static final int MAGIC_NUMBER = 0x12345678;
     private static final Map<Byte, Class<? extends Packet>> packetTypeMap;
     private static final Map<Byte, Serializer> serializerMap;
 
@@ -36,7 +36,7 @@ public class PacketCodeC {
         ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer();
         // 序列化Java对象
         byte[] bytes = Serializer.DEFAULT.serialize(packet);
-        byteBuf.writeInt(MAGIC_NUMBER);
+        byteBuf.writeInt(DefaultParameter.MAGIC_NUMBER);
         byteBuf.writeByte(packet.getVersion());
         byteBuf.writeByte(Serializer.DEFAULT.getSerializerAlogrithm());
         byteBuf.writeByte(packet.getCommand());
@@ -71,6 +71,10 @@ public class PacketCodeC {
         Class<? extends Packet> requestType = getRequestType(command);
 
         Serializer serializer = getSerializer(serializeAlgorithm);
+
+        if (requestType != null && serializer != null) {
+            return serializer.deserialize(requestType, bytes);
+        }
 
         return null;
     }

@@ -1,7 +1,9 @@
 package com.bestboke.nettycommons.nettyserializer;
 
 import com.bestboke.nettycommons.DefaultParameter;
+import com.bestboke.nettycommons.nettypacket.Command;
 import com.bestboke.nettycommons.nettypacket.LoginRequestPacket;
+import com.bestboke.nettycommons.nettypacket.LoginResponsePacket;
 import com.bestboke.nettycommons.nettypacket.Packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -9,16 +11,20 @@ import io.netty.buffer.ByteBufAllocator;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.bestboke.nettycommons.nettypacket.Command.LOGIN_REQUEST;
+
 
 public class PacketCodeC {
 
-    private static final Map<Byte, Class<? extends Packet>> packetTypeMap;
-    private static final Map<Byte, Serializer> serializerMap;
+    public static final PacketCodeC INSTANCE = new PacketCodeC();
 
-    static {
+    private final Map<Byte, Class<? extends Packet>> packetTypeMap;
+    private final Map<Byte, Serializer> serializerMap;
+
+
+    private PacketCodeC() {
         packetTypeMap = new HashMap<>();
-        packetTypeMap.put(LOGIN_REQUEST, LoginRequestPacket.class);
+        packetTypeMap.put(Command.LOGIN_REQUEST, LoginRequestPacket.class);
+        packetTypeMap.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
 
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();
@@ -31,9 +37,10 @@ public class PacketCodeC {
      * @param packet
      * @return
      */
-    public ByteBuf encode(Packet packet) {
-        // 创建ByteBuf对象
-        ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer();
+    public ByteBuf encode(ByteBufAllocator byteBufAllocator, Packet packet) {
+
+        // 1. 创建 ByteBuf 对象
+        ByteBuf byteBuf = byteBufAllocator.ioBuffer();
         // 序列化Java对象
         byte[] bytes = Serializer.DEFAULT.serialize(packet);
         byteBuf.writeInt(DefaultParameter.MAGIC_NUMBER);

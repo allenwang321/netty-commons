@@ -1,4 +1,7 @@
-package com.bestboke.nettycommons.nettypacket;
+package com.bestboke.nettycommons.nettypacket.request;
+
+import com.bestboke.nettycommons.nettypacket.Command;
+import com.bestboke.nettycommons.nettypacket.Packet;
 
 public class LoginRequestPacket extends Packet {
 

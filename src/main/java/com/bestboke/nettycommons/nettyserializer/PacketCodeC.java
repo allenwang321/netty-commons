@@ -2,9 +2,11 @@ package com.bestboke.nettycommons.nettyserializer;
 
 import com.bestboke.nettycommons.DefaultParameter;
 import com.bestboke.nettycommons.nettypacket.Command;
-import com.bestboke.nettycommons.nettypacket.LoginRequestPacket;
-import com.bestboke.nettycommons.nettypacket.LoginResponsePacket;
+import com.bestboke.nettycommons.nettypacket.request.LoginRequestPacket;
+import com.bestboke.nettycommons.nettypacket.request.MessageRequestPacket;
+import com.bestboke.nettycommons.nettypacket.response.LoginResponsePacket;
 import com.bestboke.nettycommons.nettypacket.Packet;
+import com.bestboke.nettycommons.nettypacket.response.MessageResponsePacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
@@ -25,6 +27,8 @@ public class PacketCodeC {
         packetTypeMap = new HashMap<>();
         packetTypeMap.put(Command.LOGIN_REQUEST, LoginRequestPacket.class);
         packetTypeMap.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
+        packetTypeMap.put(Command.MESSAGE_REQUEST, MessageRequestPacket.class);
+        packetTypeMap.put(Command.MESSAGE_RESPONSE, MessageResponsePacket.class);
 
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();
